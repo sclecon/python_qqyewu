@@ -45,13 +45,21 @@ if __name__ == '__main__':
 			print rootData
 			break
 			# 判断分析出的目标数据是否存在新数据
-			
-			
+			if len(rootData['url']) == 0:
+                print '没有获取到新数据'
+                continue
+			elif url_manager.is_notget(rootData['url']) is None:
+                print '获取到的新数据已采集或正在等待采集'
+                continue
+            else:
+                geturls = url_manager.is_notget(rootData['url'])
+                
 			# 循环判断是否已经获取过
 			
 			
 			# 循环获取新数据详细内容
-			
+			for url in geturls:
+                # 循环采集
 			
 			# 获取当前新数据详细内容中的指定数据
 			
