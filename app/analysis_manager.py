@@ -11,7 +11,7 @@ class analysis_manager(object):
         if html is None or url is None:
             return data
         char = 'utf-8'
-        if url == 'http://www.qqyewu.com':
+        if url.find('qqyewu') > 0:
             char = 'gb2312'
         html = html.decode(char)
         soup = BeautifulSoup(html, "html.parser")
@@ -19,9 +19,41 @@ class analysis_manager(object):
         for link in links:
             if link['href'] is None or link.get_text() is None or len(link.get_text()) == 0:
                 continue
-            data['url'].append(link['href'])
-            data['title'].append(link.get_text())
-            print "href:%s    title:%s" % (link['href'],link.get_text())
-        print ''
-        print ''
+            data['url'].append("%s%s" % (url, link['href']))
+            data['title'].append(link['title'])
+            # print "href:%s    title:%s" % (link['href'],link.get_text())
+        # print ''
+        # print ''
+        return data
+
+    def DetailData(self, html, url):
+        if html is None or url is None:
+            return None
+        if url.find('qqyewu') > 0:
+            try:
+                html = html.decode('gb2312')
+            except:
+                html = html.decode('gbk')
+            soup = BeautifulSoup(html, "html.parser")
+            if url.find('article') > 0:
+                return self.qqyewu_article_data(soup)
+            elif url.find('soft') > 0:
+                return self.qqyewu_soft_data(soup)
+        
+        return None
+
+    def qqyewu_article_data(self, soup):
+        data = {}
+        data['title'] = soup.find('div', class_="newstit").find('h1').get_text()
+        data['body'] = soup.find('div', class_="des").get_text()
+        return data
+
+    def qqyewu_soft_data(self, soup):
+        data = {}
+        data['title'] = soup.find('div', class_="tit").find('h1').get_text()
+        data['body'] = soup.find('div', class_="des").get_text()
+        data['os'] = soup.find('li', class_="gw").find("span").get_text()
+        download = soup.find('div', class_="DownloadSfotCon").find_all('li')
+        downloader = download[0].find('a')
+        data['downloader'] = downloader['href']
         return data

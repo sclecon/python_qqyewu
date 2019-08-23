@@ -4,12 +4,14 @@ import time
 import web_manager
 import analysis_manager
 import url_manager
+import dedecms_manager
 
 if __name__ == '__main__':
 	# 定义模块
 	web_manager = web_manager.web_manager()
 	analysis_manager = analysis_manager.analysis_manager()
 	url_manager = url_manager.url_manager()
+	DedeCMS = dedecms_manager.DedeCMS()
 
 	# 监测网址
 	root_url = 'http://www.qqyewu.com'
@@ -56,21 +58,27 @@ if __name__ == '__main__':
 				print '没有获取到新数据'
 				continue
 			elif url_manager.is_notget(rootData['url']) is None:
-				print '获取到的新数据已采集或正在等待采集'
+				print '没有最新的数据了'
 				continue
 			else:
 				geturls = url_manager.is_notget(rootData['url'])
 				print geturls
+				# break
 			# 循环获取新数据详细内容
 			for url in geturls:
 				# 获取详情页的html
 				itemhtml = web_manager.get_html(url)
 				# 解析详情页数据
-				itemdata = analysis_manager.DetailData(itemhtml)
+				itemdata = analysis_manager.DetailData(itemhtml, url)
 				# 打印一下详情页数据
+				print url
+				print itemdata['title']
+				# print itemdata['body']
 				print itemdata
+				print ""
+				print ""
 				# 将采集到的数据发送到dedecms
-				if dedecms.insert(itemdata) is not None
+				if DedeCMS.insert(itemdata) is not None:
 					# 将当前的url保存到已采集列表
 					url_manager.add_successUrl(url)
 		if runNum > runMaxNum and runMaxNum is not "*":
