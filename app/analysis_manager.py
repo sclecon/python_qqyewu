@@ -17,7 +17,7 @@ class analysis_manager(object):
         soup = BeautifulSoup(html, "html.parser")
         links = soup.find_all('a', href=re.compile(r"/%s(\d{5})" % time.strftime('%Y%m%d', time.localtime())))
         for link in links:
-            if link['href'] is None or link.get_text() is None:
+            if link['href'] is None or link.get_text() is None or len(link.get_text()) == 0:
                 continue
             data['url'].append(link['href'])
             data['title'].append(link.get_text())

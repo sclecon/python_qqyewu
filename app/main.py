@@ -1,11 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import time,web_manager,analysis_manager
+import time
+import web_manager
+import analysis_manager
+import url_manager
 
 if __name__ == '__main__':
 	# 定义模块
 	web_manager = web_manager.web_manager()
 	analysis_manager = analysis_manager.analysis_manager()
+	url_manager = url_manager.url_manager()
 
 	# 监测网址
 	root_url = 'http://www.qqyewu.com'
@@ -14,10 +18,13 @@ if __name__ == '__main__':
 	nowtime = int(time.time())
 	
 	# 监控每次请求的间隔时间
-	dgetime = 0.1
+	dgetime = 5
 	
 	# 当前监测次数
 	runNum = 0
+	
+	# 定义监测最大次数 *=无限次
+	runMaxNum = 10000
 	
 	# 循环监测
 	while True:
@@ -27,7 +34,7 @@ if __name__ == '__main__':
 		if runtime > (nowtime+dgetime):
 			# 记录这是第多少次监测
 			runNum+=1
-		
+			
 			# 设置本次监测时间
 			nowtime = int(time.time())
 			
@@ -42,32 +49,29 @@ if __name__ == '__main__':
 				print '第%d次监测:获取数据成功' % runNum
 			# 分析监测目标数据
 			rootData = analysis_manager.analysis_nowurls(roothtml, root_url)
-			print rootData
-			break
+			# print rootData
+			
 			# 判断分析出的目标数据是否存在新数据
 			if len(rootData['url']) == 0:
-                print '没有获取到新数据'
-                continue
+				print '没有获取到新数据'
+				continue
 			elif url_manager.is_notget(rootData['url']) is None:
-                print '获取到的新数据已采集或正在等待采集'
-                continue
-            else:
-                geturls = url_manager.is_notget(rootData['url'])
-                
-			# 循环判断是否已经获取过
-			
-			
+				print '获取到的新数据已采集或正在等待采集'
+				continue
+			else:
+				geturls = url_manager.is_notget(rootData['url'])
+				print geturls
 			# 循环获取新数据详细内容
 			for url in geturls:
-                # 循环采集
-			
-			# 获取当前新数据详细内容中的指定数据
-			
-			
-			# 记录当前获取到的数据
-			
-			
-			# 记录当前获取的数据网址
-			
-		if runNum > 100:
+				# 获取详情页的html
+				itemhtml = web_manager.get_html(url)
+				# 解析详情页数据
+				itemdata = analysis_manager.DetailData(itemhtml)
+				# 打印一下详情页数据
+				print itemdata
+				# 将采集到的数据发送到dedecms
+				if dedecms.insert(itemdata) is not None
+					# 将当前的url保存到已采集列表
+					url_manager.add_successUrl(url)
+		if runNum > runMaxNum and runMaxNum is not "*":
 			break
