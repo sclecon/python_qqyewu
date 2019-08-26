@@ -26,7 +26,7 @@ if __name__ == '__main__':
 	runNum = 0
 	
 	# 定义监测最大次数 *=无限次
-	runMaxNum = 10000
+	runMaxNum = 10
 	
 	# 循环监测
 	while True:
@@ -82,4 +82,5 @@ if __name__ == '__main__':
 					# 将当前的url保存到已采集列表
 					url_manager.add_successUrl(url)
 		if runNum > runMaxNum and runMaxNum is not "*":
+			print '监测结束'
 			break

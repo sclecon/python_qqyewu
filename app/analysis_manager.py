@@ -46,6 +46,9 @@ class analysis_manager(object):
         data = {}
         data['title'] = soup.find('div', class_="newstit").find('h1').get_text()
         data['body'] = soup.find('div', class_="des").get_text()
+        data['url_type'] = 'article'
+        data['catyname'] = soup.find('div', class_="breadcrumb").find('a', href=re.compile(r"index.html")).get_text()
+        print data['catyname']
         return data
 
     def qqyewu_soft_data(self, soup):
@@ -56,4 +59,7 @@ class analysis_manager(object):
         download = soup.find('div', class_="DownloadSfotCon").find_all('li')
         downloader = download[0].find('a')
         data['downloader'] = downloader['href']
+        data['url_type'] = 'soft'
+        data['catyname'] = soup.find('div', class_="breadcrumb").find('a', href=re.compile(r"index.html")).get_text()
+        print data['catyname']
         return data
