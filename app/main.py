@@ -52,10 +52,7 @@ if __name__ == '__main__':
 					url_manager.add_successUrl(url)
 					successNum+=1
 			if successNum:
-				if web_manager.updateHtmlCache(time.strftime('%Y-%m-%d', time.localtime())):
-					print "DEDECMS缓存更新成功"
-				else:
-					print "DEDECMS缓存更新失败"
+				pass
 		if runNum > runMaxNum and runMaxNum is not "*":
 			print '监测结束'
 			break

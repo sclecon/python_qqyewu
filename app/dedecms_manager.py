@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 import MySQLdb
 import time
+import sys
+import web_manager
+if sys.getdefaultencoding() != 'gbk':
+    reload(sys)
+    sys.setdefaultencoding('gbk')
 
 class DedeCMS(object):
 	dedeCaty = {89:['QQ资讯','QQ新闻资讯','QQ急救室','免费QQ业务','免费QQ秀','免费点亮QQ图标'], 84:['QQ新闻','QQ空间代码','QQ空间模块','QQ常见问题'], 85:['QQ教程'], 91:['QQ软件'], 92:['更多资讯'], 90:['网赚笔记'], 86:['值得一看','游戏攻略','网游攻略'], 87:['剁手党','天天剁手价'], 88:['网站公告']}
@@ -40,6 +45,7 @@ class DedeCMS(object):
 				data['downname'] = '点击下载'
 		except:
 			data['downname'] = '点击下载'
+		print data['title']
 		data['typeid'] = self.get_newdata_type(data['catyname'])
 		
 		if data['url_type'] == 'article':
@@ -47,13 +53,16 @@ class DedeCMS(object):
 		else:
 			aid = self.add_soft(data['typeid'], data['title'], data['body'], data['downloader'], data['downname'])
 		# print aid
+		if web_manager.web_manager().updateHtmlCache(time.strftime('%Y-%m-%d', time.localtime())):
+			print "DEDECMS缓存更新成功"
+		else:
+			print "DEDECMS缓存更新失败"
 		return True
 	
 	def get_newdata_type(self, catyname):
 		typeid = self.default_typeid
 		if catyname is None:
 			return typeid
-		print catyname
 		for item_typeid,types in self.dedeCaty.items():
 			if catyname in types:
 				typeid = item_typeid

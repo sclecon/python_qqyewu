@@ -12,7 +12,7 @@ class analysis_manager(object):
             return data
         char = 'utf-8'
         if url.find('qqyewu') > 0:
-            char = 'gb2312'
+            char = 'gbk'
         html = html.decode(char)
         soup = BeautifulSoup(html, "html.parser")
         links = soup.find_all('a', href=re.compile(r"/%s(\d{5})" % time.strftime('%Y%m%d', time.localtime())))
@@ -31,7 +31,7 @@ class analysis_manager(object):
             return None
         if url.find('qqyewu') > 0:
             try:
-                html = html.decode('gb2312')
+                html = html.decode('gbk')
             except:
                 html = html.decode('gbk')
             soup = BeautifulSoup(html, "html.parser")
