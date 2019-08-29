@@ -135,7 +135,7 @@ class DedeCMS(object):
 	
 
 if False:
-	title = "测试软件帖子 QQ教程 时间：%s" % int(time.time()) 
+	title = "测试帖子 QQ教程 更新缓存 时间：%s" % time.strftime('%Y-%m-%d', time.localtime())
 	DedeData = {'catyname':'QQ教程', 'url_type':'sort', 'title':title, 'body':'body message python测试添加内容','downloader':'http://www.baidu.com','downname':'百度下载'}
 	if DedeCMS().insert(DedeData) is True:
 		print '插入数据成功'

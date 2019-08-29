@@ -44,11 +44,18 @@ if __name__ == '__main__':
 				continue
 			else:
 				geturls = url_manager.is_notget(rootData['url'])
+			successNum = 0
 			for url in geturls:
 				itemhtml = web_manager.get_html(url)
 				itemdata = analysis_manager.DetailData(itemhtml, url)
 				if DedeCMS.insert(itemdata) is not None:
 					url_manager.add_successUrl(url)
+					successNum+=1
+			if successNum:
+				if web_manager.updateHtmlCache(time.strftime('%Y-%m-%d', time.localtime())):
+					print "DEDECMS缓存更新成功"
+				else:
+					print "DEDECMS缓存更新失败"
 		if runNum > runMaxNum and runMaxNum is not "*":
 			print '监测结束'
 			break

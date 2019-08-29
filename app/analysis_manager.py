@@ -33,7 +33,7 @@ class analysis_manager(object):
             try:
                 html = html.decode('gb2312')
             except:
-                pass
+                html = html.decode('gbk')
             soup = BeautifulSoup(html, "html.parser")
             if url.find('article') > 0:
                 return self.qqyewu_article_data(soup)
