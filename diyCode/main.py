@@ -4,13 +4,13 @@ import time
 import web_manager
 import analysis_manager
 import url_manager
-import dedecms_manager
+import diymysql_manager
 
 if __name__ == '__main__':
 	web_manager = web_manager.web_manager()
 	analysis_manager = analysis_manager.analysis_manager()
 	url_manager = url_manager.url_manager()
-	DedeCMS = dedecms_manager.DedeCMS()
+	DIyMysqlDB = diymysql_manager.DIyMysqlDB()
 
 	root_url = 'http://www.qqyewu.com'
 	
@@ -52,11 +52,15 @@ if __name__ == '__main__':
 			for url in geturls:
 				itemhtml = web_manager.get_html(url)
 				itemdata = analysis_manager.DetailData(itemhtml, url)
-				if DedeCMS.insert(itemdata) is not None:
+				try:
+					downloader = itemdata['downloader']
+				except Exception as e:
+					downloader = ''
+				if DIyMysqlDB.addArticle(itemdata['catyname'], itemdata['title'], itemdata['body'], downloader) is not None:
 					url_manager.add_successUrl(url)
-					successNum+=1
-			if successNum:
-				pass
+					print '写入 %s 的数据成功' % url
+				else:
+					print '写入 %s 的数据失败' % url
 		if runNum > runMaxNum and runMaxNum is not "*":
 			print '监测结束'
 			break
